@@ -4,27 +4,87 @@
 	<title>18</title>
 	<meta charset="utf-8">
 	<style type="text/css">
-li{list-style: none;float: left;width: 40px;height: 40px;line-height: 40px;text-align: center; background: red;color: #fff;}
+li{list-style: none;float: left;width: 40px;height: 40px;line-height: 40px;text-align: center; background: red;color: #fff;margin-right: 20px;}
 ul:after{content: '';display: table;clear: both;}
 
 	</style>
 </head>
 <body>
-<input type="text"></input>
+<input type="text" id="input"></input>
 <button id="l_in">左侧入</button>
 <button id="r_in">右侧入</button>
 
 <button id="l_out">左侧出</button>
 <button id="r_out">右侧出</button>
 <ul id="list">
-	<li>1</li>
 </ul>
 </body>
 <script type="text/javascript">
-	var l_in = getElementById('l_in')
-	var r_in = getElementById('r_in')
-	var l_out = getElementById('l_out')
-	var r_out = getElementById('r_out')
+(function () {
+	var input = document.getElementById('input');
+	var l_in = document.getElementById('l_in');
+	var r_in = document.getElementById('r_in');
+	var l_out = document.getElementById('l_out');
+	var r_out = document.getElementById('r_out');
+
+	var list = document.getElementById('list');
+
+	l_in.onclick = function () {
+		var num = input.value
+		if (check) {
+			leftIn(num,list)
+		}
+	}
+	l_out.onclick = function () {
+		leftOut(list)
+	}
+	r_in.onclick = function () {
+		var num = input.value
+		if (check) {
+			rightIn(num,list)
+		}
+	}
+	r_out.onclick = function () {
+		rightOut(list)
+	}
+	
+})()
+
+function check(num) {
+	if (num && num.match(/[0-9]/)) {
+		return true
+	}else{
+		return false
+	}
+}
+function leftIn(num,list) {
+	var li = document.createElement('li');
+	li.onclick = function() {
+		list.removeChild(li);
+	}
+	li.innerText = num;
+	if (list.firstChild) {
+		list.insertBefore(li,list.firstChild);
+	}else{
+		list.appendChild(li)
+	}
+}
+function leftOut(list) {
+	var li = list.firstChild;
+	list.removeChild(li)
+}
+function rightIn(num,list) {
+	var li = document.createElement('li');
+	li.onclick = function() {
+		list.removeChild(li);
+	}
+	li.innerText = num;
+	list.appendChild(li);
+}
+function rightOut(list) {
+	var li = list.lastChild;
+	list.removeChild(li)
+}
 
 </script>
 </html>
