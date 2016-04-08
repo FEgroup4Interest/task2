@@ -4,8 +4,9 @@
 	<title>18</title>
 	<meta charset="utf-8">
 	<style type="text/css">
-li{list-style: none;float: left;width: 40px;height: 40px;line-height: 40px;text-align: center; background: red;color: #fff;margin-right: 20px;}
-ul:after{content: '';display: table;clear: both;}
+	ul{display: flex;align-items: flex-end;}
+li{list-style: none;width: 20px; background: red;color: #fff;margin-right: 10px;}
+ul:after{content: '';display: table;clear: both;height: 100px;}
 
 	</style>
 </head>
@@ -16,6 +17,7 @@ ul:after{content: '';display: table;clear: both;}
 
 <button id="l_out">左侧出</button>
 <button id="r_out">右侧出</button>
+<button id="layout">排序</button>
 <ul id="list">
 </ul>
 </body>
@@ -26,65 +28,102 @@ ul:after{content: '';display: table;clear: both;}
 	var r_in = document.getElementById('r_in');
 	var l_out = document.getElementById('l_out');
 	var r_out = document.getElementById('r_out');
+	var arr = []
 
 	var list = document.getElementById('list');
 
 	l_in.onclick = function () {
 		var num = input.value
-		if (check) {
-			leftIn(num,list)
-		}
+		leftIn(num,list,arr)
+		console.log(arr)		
 	}
 	l_out.onclick = function () {
-		leftOut(list)
+		leftOut(list,arr)
+		console.log(arr)
 	}
 	r_in.onclick = function () {
 		var num = input.value
-		if (check) {
-			rightIn(num,list)
-		}
+		rightIn(num,list,arr)
+		console.log(arr)
 	}
 	r_out.onclick = function () {
-		rightOut(list)
+		rightOut(list,arr)
+		console.log(arr)
 	}
 	
 })()
 
-function check(num) {
-	if (num && num.match(/[0-9]/)) {
-		return true
+function check(num,arr) {
+	if (arr.length <= 60) {
+		if (num && num.match(/[0-9]/) && num>10 && num<100) {
+			return 1
+		}else{
+			return 0
+		}		
 	}else{
-		return false
+		return 2
 	}
 }
-function leftIn(num,list) {
-	var li = document.createElement('li');
-	li.onclick = function() {
-		list.removeChild(li);
+function leftIn(num,list,arr) {
+	if (check(num,arr) === 1) {
+		arr.unshift(num)
+		draw(list,arr)
+		// var li = document.createElement('li');
+		// li.onclick = function() {
+		// 	list.removeChild(li);
+		// }
+		// li.style.height = num + 'px';
+		// if (list.firstChild) {
+		// 	list.insertBefore(li,list.firstChild);
+		// }else{
+		// 	list.appendChild(li)
+		// }
+	}else if(check(num,arr) === 0){
+		console.log('类型错误')
+	}else {
+		console.log('长度超出')
 	}
-	li.innerText = num;
-	if (list.firstChild) {
-		list.insertBefore(li,list.firstChild);
-	}else{
+
+}
+function leftOut(list,arr) {
+	arr.shift()
+	draw(list,arr)
+	// var li = list.firstChild;
+	// list.removeChild(li)
+}
+function rightIn(num,list,arr) {
+	if (check(num,arr) === 1) {
+		arr.push(num)
+		draw(list,arr)
+		// var li = document.createElement('li');
+		// li.onclick = function() {
+		// 	list.removeChild(li);
+		// }
+		// li.style.height = num + 'px';
+		// list.appendChild(li);		
+	}else if(check(num,arr) === 0){
+		console.log('类型错误')
+	}else {
+		console.log('长度超出')
+	}
+
+}
+function rightOut(list,arr) {
+	arr.pop()
+	draw(list,arr)
+	// var li = list.lastChild;
+	// list.removeChild(li)
+}
+function draw(list,arr) {
+	list.innerHTML='';
+	for (var i = 0; i < arr.length; i++) {
+		var li = document.createElement('li')
+		li.style.height = arr[i] + 'px';
 		list.appendChild(li)
 	}
 }
-function leftOut(list) {
-	var li = list.firstChild;
-	list.removeChild(li)
+function sort(arr) {
+	// body...
 }
-function rightIn(num,list) {
-	var li = document.createElement('li');
-	li.onclick = function() {
-		list.removeChild(li);
-	}
-	li.innerText = num;
-	list.appendChild(li);
-}
-function rightOut(list) {
-	var li = list.lastChild;
-	list.removeChild(li)
-}
-
 </script>
 </html>
