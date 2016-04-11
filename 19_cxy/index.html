@@ -28,7 +28,8 @@ ul:after{content: '';display: table;clear: both;height: 100px;}
 	var r_in = document.getElementById('r_in');
 	var l_out = document.getElementById('l_out');
 	var r_out = document.getElementById('r_out');
-	var arr = []
+	var sortbtn = document.getElementById('layout');
+	var arr = ['50','30','40','67']
 
 	var list = document.getElementById('list');
 
@@ -50,6 +51,11 @@ ul:after{content: '';display: table;clear: both;height: 100px;}
 		rightOut(list,arr)
 		console.log(arr)
 	}
+	sortbtn.onclick = function() {
+		arr = qsort(arr)
+		draw(list,arr)
+		console.log(arr)
+	}
 	
 })()
 
@@ -68,16 +74,6 @@ function leftIn(num,list,arr) {
 	if (check(num,arr) === 1) {
 		arr.unshift(num)
 		draw(list,arr)
-		// var li = document.createElement('li');
-		// li.onclick = function() {
-		// 	list.removeChild(li);
-		// }
-		// li.style.height = num + 'px';
-		// if (list.firstChild) {
-		// 	list.insertBefore(li,list.firstChild);
-		// }else{
-		// 	list.appendChild(li)
-		// }
 	}else if(check(num,arr) === 0){
 		console.log('类型错误')
 	}else {
@@ -88,19 +84,11 @@ function leftIn(num,list,arr) {
 function leftOut(list,arr) {
 	arr.shift()
 	draw(list,arr)
-	// var li = list.firstChild;
-	// list.removeChild(li)
 }
 function rightIn(num,list,arr) {
 	if (check(num,arr) === 1) {
 		arr.push(num)
 		draw(list,arr)
-		// var li = document.createElement('li');
-		// li.onclick = function() {
-		// 	list.removeChild(li);
-		// }
-		// li.style.height = num + 'px';
-		// list.appendChild(li);		
 	}else if(check(num,arr) === 0){
 		console.log('类型错误')
 	}else {
@@ -111,8 +99,6 @@ function rightIn(num,list,arr) {
 function rightOut(list,arr) {
 	arr.pop()
 	draw(list,arr)
-	// var li = list.lastChild;
-	// list.removeChild(li)
 }
 function draw(list,arr) {
 	list.innerHTML='';
@@ -122,8 +108,28 @@ function draw(list,arr) {
 		list.appendChild(li)
 	}
 }
-function sort(arr) {
-	// body...
+function qsort(arr) {
+	arr = arr.concat()
+	var list = document.getElementById('list');
+	if (arr.length == 0) {
+		return []
+	}
+	var left = [];
+	var right = [];
+	var pivotIndex = Math.floor(arr.length / 2);
+
+	var sign = arr.splice(pivotIndex,1)[0];
+	for (var i = 0; i < arr.length; i++) {
+		if (arr[i] < sign) {
+			left.push(arr[i])
+			
+		} else{
+			right.push(arr[i])
+		}
+	}
+	var li = left.concat(sign,right)
+	
+	return qsort(left).concat(sign,qsort(right))
 }
 </script>
 </html>
