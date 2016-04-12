@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>20</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+li{list-style: none;float: left;padding: 0 10px;height: 40px;line-height: 40px;text-align: center; background: red;color: #fff;margin-right: 20px;}
+ul:after{content: '';display: table;clear: both;}
+span{background: #fff;color: #000}
+
+	</style>
+</head>
+<body>
+<textarea id="input"></textarea>
+<button id="l_in">左侧入</button>
+<button id="r_in">右侧入</button>
+
+<button id="l_out">左侧出</button>
+<button id="r_out">右侧出</button>
+<input type="text" id="search"></input>
+<button id="searchBtn">查找</button>
+<ul id="list">
+</ul>
+</body>
+<script type="text/javascript">
+(function () {
+	var input = document.getElementById('input');
+	var l_in = document.getElementById('l_in');
+	var r_in = document.getElementById('r_in');
+	var l_out = document.getElementById('l_out');
+	var r_out = document.getElementById('r_out');
+
+	var list = document.getElementById('list');
+	var searchBtn = document.getElementById('searchBtn')
+
+
+	var arr = []
+	l_in.onclick = function () {
+		var num = input.value
+		leftIn(num,list,arr)
+	}
+	l_out.onclick = function () {
+		leftOut(list,arr)
+	}
+	r_in.onclick = function () {
+		var num = input.value
+		rightIn(num,list,arr)
+
+	}
+	r_out.onclick = function () {
+		rightOut(list,arr)
+	}
+	searchBtn.onclick = function () {
+		draw(list,arr.map(search))
+	}
+	
+})()
+function search(value) {
+	var searchIn = document.getElementById('search')
+	var str = searchIn.value
+	var newValue = value.replace(str,'<span>'+str+'</span>')
+	return newValue
+}
+function leftIn(num,list,arr) {
+	arr.unshift(num)
+	draw(list,arr)
+
+}
+function leftOut(list,arr) {
+	arr.shift()
+	draw(list,arr)
+}
+function rightIn(num,list,arr) {
+	arr.push(num)
+	draw(list,arr)
+}
+function rightOut(list,arr) {
+	arr.pop()
+	draw(list,arr)
+}
+function draw(list,arr) {
+	list.innerHTML='';
+	for (var i = 0; i < arr.length; i++) {
+		var li = document.createElement('li')
+		li.innerHTML = arr[i]
+		list.appendChild(li)
+	}
+}
+
+</script>
+</html>
