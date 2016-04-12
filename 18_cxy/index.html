@@ -31,7 +31,7 @@ ul:after{content: '';display: table;clear: both;}
 
 	l_in.onclick = function () {
 		var num = input.value
-		if (check) {
+		if (check(num)) {
 			leftIn(num,list)
 		}
 	}
@@ -40,7 +40,7 @@ ul:after{content: '';display: table;clear: both;}
 	}
 	r_in.onclick = function () {
 		var num = input.value
-		if (check) {
+		if (check(num)) {
 			rightIn(num,list)
 		}
 	}
