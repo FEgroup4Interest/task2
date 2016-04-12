@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>task_29</title>
+	<style>
+/* clearfix */
+.clearfix:after{
+	content:".";
+	display:block;
+	height:0;
+	clear:both;
+	visibility:hidden
+}
+.clearfix{*+height:1%;}
+.form-item {
+  width: 385px;
+  margin: 20px auto;
+  line-height: 1.5em;
+  vertical-align: middle;
+}
+.form-item>label {
+  float: left;
+  width: 15%;
+  text-align: center;
+}
+.input-wrapper {
+  float: left;
+  width: 50%;
+  height: 3em;
+}
+.input {
+  outline: none;
+	border-radius: 5px;
+	text-indent: 0.5em;
+	border: 1px solid #ccc
+}
+.button-wrapper {
+  width: 15%;
+  float: left;
+  text-align: left;
+}
+	</style>
+</head>
+<body>
+  <div class="form-item clearfix">
+    <label class="form-label" for="username">名称:</label>
+    <div class="input-wrapper">
+      <input class="input" type="text" value="" id="username" name="username" ><br>
+      <span class="input-helper" id="helper">必填,长度为4~16个字符</span>
+    </div>
+    <div class="button-wrapper">
+      <button class="button" type="button" id="validator">验证</button>
+    </div>
+  </div>
+</body>
+<script>
+  (function(w, d, undefined){
+		// 获取需要操作的DOM元素
+    var username = d.getElementById('username')
+    var validator = d.getElementById('validator')
+		var helper = d.getElementById('helper')
+
+		// 字符串长度计算
+    var countLength = function(str) {
+      var len = 0,
+					// 该正则能够验证中文及中文全角标点符号, 参考http://ju.outofmemory.cn/entry/53571, 完整CJK字符验证实在太长, 故没有使用
+					chineseReg = /[\u3400-\u4DB5]|[\u4E00-\u9FA5]|[\u9FA6-\u9FBB]|[\uF900-\uFA2D]|[\uFA30-\uFA6A]|[\uFA70-\uFAD9]|[\uFF00-\uFFEF]|[\u2E80-\u2EFF]|[\u3000-\u303F]|[\u31C0-\u31EF]/;
+      for (var i = 0; i < str.length; i++) {
+        if (chineseReg.test(str[i])) {
+          len += 2
+        } else {
+          len += 1
+        }
+      }
+      return len
+    }
+
+		// 根据验证结果对DOM进行更新
+		var updateHelper = function(msg) {
+			if (msg instanceof Error) {
+				username.style.border = '1px solid #de0012'
+				helper.style.color = '#de0012'
+				helper.innerHTML = msg.message
+			} else {
+				username.style.border = '1px solid #60bb44'
+				helper.style.color = '#60bb44'
+				helper.innerHTML = msg
+			}
+		}
+
+		// 验证策略对象
+    var validateList = {
+      max: function(value, maxLen) {
+        return countLength(value) < maxLen
+      },
+      min: function(value, minLen) {
+        return countLength(value) > minLen
+      },
+      required: function(value, flag) {
+        if (flag) {
+          return value !== ''
+        } else {
+          return true
+        }
+      }
+    }
+
+		// 根据配置和验证策略对象生成验证函数
+    var validation = function(el, option, callback) {
+      return function() {
+        var flag = true
+        for (var key in option) {
+          if (option.hasOwnProperty(key) && !!validateList[key]) {
+            if (!validateList[key](el.value, option[key].value)) {
+              flag = false
+							return callback(new Error(option[key].errorMsg))
+            }
+          }
+        }
+				return callback(option.passMsg)
+      }
+    }
+
+		// username的验证函数
+    var usernameValidator = validation(username, {
+      required: {
+				value: true,
+				errorMsg: '姓名不能为空'
+			},
+      max: {
+				value: 16,
+				errorMsg: '名称长度应小于16, 每个汉字，中文符号长度为2'
+			},
+      min: {
+				value: 4,
+				errorMsg: '名称长度应大于4, 每个汉字，中文符号长度为2'
+			},
+			passMsg: '名称格式正确'
+    }, updateHelper)
+
+		// 绑定事件
+    if (addEventListener) {
+      validator.addEventListener('click', usernameValidator)
+    } else {
+    	validator.attachEvent('onclick', usernameValidator)
+    }
+  })(window, document)
+</script>
+</html>
