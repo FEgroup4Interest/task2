@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>21</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+li{list-style: none;float: left;width: 60px;height: 40px;line-height: 40px;text-align: center; background: #F57C7C;color: #fff;margin-right: 20px;}
+li:hover{
+	width: 80px;
+}
+ul:after{content: '';display: table;clear: both;}
+
+	</style>
+</head>
+<body>
+<input type="text" id="taginput"></input>
+<button id="tagbtn">添加tag</button>
+<ul id="tag">
+</ul>
+<textarea id="input"></textarea>
+<button id="lovebtn">添加兴趣爱好</button>
+
+<ul id="loves">
+</ul>
+</body>
+<script type="text/javascript">
+(function () {
+	var tag = document.getElementById('tag');
+	var tagbtn = document.getElementById('tagbtn');
+	var taginput = document.getElementById('taginput');
+
+	var list = document.getElementById('loves');
+	var loveinput = document.getElementById('input');
+	var lovebtn = document.getElementById('lovebtn')
+
+	var tags = []
+	var loves = []
+
+	tagbtn.onclick = function () {
+		var str = taginput.value
+		rightIn(str,tag,tags)
+	}
+
+	taginput.onkeyup = function(e) {
+		var str = taginput.value
+		if (str.match(/,|;|，|；|、|\s/) || e.keyCode == 13) {
+			str = str.replace(/,|;|，|；|、|\s/,'')
+			rightIn(str,tag,tag)
+			taginput.value = ''
+		}
+	}
+	tag.onclick = function (e) {
+		if (e.target.tagName == 'LI') {
+			var str = e.target.innerText.replace('删除','')
+			var num = tags.indexOf(str)
+			tags.splice(num,1)
+			console.log(tags)
+			draw(tag,tags)
+		}
+	}
+	tag.onmouseover = function (e) {
+		if (e.target.tagName == 'LI') {
+			e.target.innerHTML = '<span>删除</span>' + e.target.innerHTML
+		}
+	}
+	tag.onmouseout = function (e) {
+		if (e.target.tagName == 'LI') {
+			e.target.removeChild(e.target.getElementsByTagName('span')[0]) 
+		}
+	}
+	lovebtn.onclick = function () {
+		var str = loveinput.value
+		putLove(str,list,loves)
+	}
+
+
+})()
+function putLove(str,list,arr) {
+	var loves = cutstr(str)
+	for (var i = 0; i < loves.length; i++) {
+		rightIn(loves[i],list,arr)
+		draw(list,arr)
+	}
+}
+
+function cutstr(str) {
+	var reg = /,|;|，|；|、|\s/
+	var arr = str.split(reg)
+	return arr
+}
+
+function rightIn(str,list,arr) {
+	var i = true
+	str = str.trim()
+	arr.map(function(value) {
+		if (value == str) i = false
+	})
+	if (i && str) {
+		if (arr.length < 10) {
+			arr.push(str)
+			draw(list,arr)
+		}else{
+			arr.shift()
+			arr.push(str)
+			draw(list,arr)
+		}
+	}else{
+		console.log('输入重复')
+	}
+}
+
+function draw(list,arr) {
+	list.innerHTML='';
+	for (var i = 0; i < arr.length; i++) {
+		var li = document.createElement('li')
+		li.innerHTML = arr[i];
+		list.appendChild(li)
+	}
+}
+
+</script>
+</html>
